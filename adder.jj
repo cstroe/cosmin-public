@@ -31,14 +31,22 @@ int Start() throws NumberFormatException:
 }
 {
   t = <NUMBER>
-  { i = Integer.parseInt(t.image); }
-  { value = i; }
+  value = Primary()
   (
     <PLUS>
     t = <NUMBER>
-    { i = Integer.parseInt(t.image); }
+    i = Primary()
     { value += i; }
   )*
   <EOF>
   { return value; }
+}
+
+int Primary() throws NumberFormatException:
+{
+  Token t;
+}
+{
+  t = <NUMBER>
+  { return Integer.parseInt(t.image); }
 }
