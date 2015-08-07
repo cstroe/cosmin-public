@@ -30,7 +30,6 @@ int Start() throws NumberFormatException:
   int value;
 }
 {
-  t = <NUMBER>
   value = Primary()
   (
     <PLUS>
