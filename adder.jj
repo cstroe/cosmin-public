@@ -1,0 +1,34 @@
+/* adder.jj Adding up numbers tutorial */
+options {
+  STATIC = false;
+}
+
+PARSER_BEGIN(Adder)
+  class Adder {
+    static void main(String[] args) throws ParseException, TokenMgrError {
+      Adder parser = new Adder(System.in);
+      parser.Start();
+    }
+  }
+PARSER_END(Adder)
+
+/* Lexical Analyzer */
+
+SKIP: {" "}
+SKIP: {"\n" | "\r" | "\r\n"}
+TOKEN: { <PLUS : "+"> }
+TOKEN: { <NUMBER : (["0"-"9"])+> }
+
+
+/* Parser */
+
+void Start():
+{}
+{
+  <NUMBER>
+  (
+    <PLUS>
+    <NUMBER>
+  )*
+  <EOF>
+}
