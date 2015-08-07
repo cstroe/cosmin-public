@@ -5,7 +5,7 @@ options {
 
 PARSER_BEGIN(Adder)
   class Adder {
-    static void main(String[] args) throws ParseException, TokenMgrError {
+    public static void main(String[] args) throws ParseException, TokenMgrError {
       Adder parser = new Adder(System.in);
       parser.Start();
     }
