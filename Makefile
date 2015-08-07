@@ -6,3 +6,6 @@ adder: adder.jj
 
 clean:
 	rm -f *.java *.class
+
+add:
+	java Adder < adder_input.txt
