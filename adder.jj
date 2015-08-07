@@ -34,7 +34,6 @@ int Start() throws NumberFormatException:
   value = Primary()
   (
     <PLUS>
-    t = <NUMBER>
     i = Primary()
     { value += i; }
   )*
