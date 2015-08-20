@@ -1,21 +1,6 @@
 
 /***********************************************************************
  * Adapted from Exp6_2_LineFollowing_IRSensors -- RedBot Experiment 6
- *
- * This code reads the three line following sensors on A3, A6, and A7
- * and prints them out to the Serial Monitor. Upload this example to your
- * RedBot and open up the Serial Monitor by clicking the magnifying glass
- * in the upper-right hand corner.
- *
- * This is a real simple example of a line following algorithm. It has 
- * a lot of room for improvement, but works fairly well for a curved track. 
- * It does not handle right angles reliably -- maybe you can come up with a 
- * better solution?
- * 
- * This sketch was written by SparkFun Electronics,with lots of help from
- * the Arduino community. This code is completely free for any use.
- *
- * 18 Reb 2015 B. Huang
  ***********************************************************************/
 
 #include <RedBot.h>
@@ -23,30 +8,32 @@ RedBotSensor left = RedBotSensor(A3);   // initialize a left sensor object on A3
 RedBotSensor center = RedBotSensor(A6); // initialize a center sensor object on A6
 RedBotSensor right = RedBotSensor(A7);  // initialize a right sensor object on A7
 
-// constants that are used in the code. LINETHRESHOLD is the level to detect 
-// if the sensor is on the line or not. If the sensor value is greater than this
-// the sensor is above a DARK line.
-//
-// SPEED sets the nominal speed
-
-//#define LINETHRESHOLD 200
 #define SPEED 120  // sets the nominal speed. Set to any number from 0 - 255.
+
+#define SPEED_ADJUSTMENT 30
+
+#define COUNTER_MAX 20
+
+// These thresholds are manually configured.
+#define TAPE_THRESHOLD  600 // below this value, we are looking at the tape
+#define BLUE_THRESHOLD  750 // above the TAPE_THRESHOLD and below this threshold, we are looking at blue carpet
+#define BLACK_THRESHOLD 850 // above this threshold, we are looking at black carpet
+
+#define NOT_SET 0
+#define TAPE_STATE 1
+#define NOT_TAPE_STATE 2
 
 RedBotMotors motors;
 int leftSpeed;   // variable used to store the leftMotor speed
 int rightSpeed;  // variable used to store the rightMotor speed
 
-int LINETHRESHOLD = 0;
+bool driftingRight = false;
+bool driftingLeft = false;
 
 void setup()
 {
   Serial.begin(9600);
-  Serial.println("Welcome to experiment 6.2 - Line Following");
-   
-  Serial.println("Calibration begin");
-  calibrate();
-  Serial.println("Calibration end");
-      
+  Serial.println("Line Following Startup");  
   Serial.println("------------------------------------------");
   delay(2000);
   Serial.println("IR Sensor Readings: ");
@@ -55,67 +42,92 @@ void setup()
 
 void loop()
 {
-  Serial.print(left.read());
-  Serial.print("\t");  // tab character
-  Serial.print(center.read());
-  Serial.print("\t");  // tab character
-  Serial.print(right.read());
-  Serial.println();
-
-  // if on the line drive left and right at the same speed (left is CCW / right is CW)
-  if(center.read() < LINETHRESHOLD)
-  {
-    leftSpeed = -SPEED; 
-    rightSpeed = SPEED;
+  int leftReading = left.read();
+  int centerReading = center.read();
+  int rightReading = right.read();
+  
+  // reset speeds to base speed
+  leftSpeed =  SPEED; 
+  rightSpeed = SPEED;
+  
+  // no drift
+  if((onTape(centerReading) && !onTape(leftReading) && !onTape(rightReading)) ||
+     (onTape(centerReading) && onTape(leftReading) && onTape(rightReading))) {
+    driftingLeft = false;
+    driftingRight = false;
   }
    
-  // if the line is under the right sensor, 
-  // adjust relative speeds to turn to the right
-  else if(right.read() < LINETHRESHOLD)
+  // drifting left
+  if((onTape(rightReading) && onTape(centerReading) && !onTape(leftReading)) ||
+     (onTape(rightReading) && !onTape(centerReading) && !onTape(leftReading))) 
   {
-    leftSpeed = -(SPEED + 50);
-    rightSpeed = SPEED - 50;
+    driftingLeft = true;
+    driftingRight = false;
+    
+    rightSpeed -= SPEED_ADJUSTMENT;
   }
 
-  // if the line is under the left sensor, adjust relative speeds to turn to the left
-  else if(left.read() < LINETHRESHOLD)
+  // drift right
+  if((onTape(leftReading) && onTape(centerReading) && !onTape(rightReading)) ||
+     (onTape(leftReading) && !onTape(centerReading) && !onTape(rightReading)))
   {
-    leftSpeed = -(SPEED - 50);
-    rightSpeed = SPEED + 50;
+    driftingRight = true;
+    driftingLeft = false;
+    
+    leftSpeed -= SPEED_ADJUSTMENT;
   }
     
-  // if all sensors are on black or up in the air, stop the motors.
-  // otherwise, run motors given the control speeds above.
-  if((left.read() < LINETHRESHOLD) && 
-     (center.read() < LINETHRESHOLD) && (right.read() < LINETHRESHOLD) )
+  // recovery
+  if(!onTape(leftReading) && !onTape(centerReading) && !onTape(rightReading))
   {
-    motors.stop();
+    if(driftingLeft) {
+      leftSpeed = SPEED;
+      rightSpeed = 70;
+    }
+    else if(driftingRight) {
+      rightSpeed = SPEED;
+      leftSpeed = 70;
+    }
   }
-  else
-  {
-    motors.leftMotor(leftSpeed);
-    motors.rightMotor(rightSpeed);   
-  }
+
+  driveRightForward(rightSpeed);
+  driveLeftForward(leftSpeed);
+  
   delay(0);  // add a delay to decrease sensitivity.
+  
+  Serial.print(leftReading);
+  Serial.print("\t");  // tab character
+  Serial.print(centerReading);
+  Serial.print("\t");  // tab character
+  Serial.print(rightReading);
+  Serial.print("\t");
+  Serial.print("\t|\t");
+  if(driftingLeft) { Serial.print("DRIFT LEFT"); }
+  Serial.print("\t");
+  if(driftingRight) { Serial.print("DRIFT RIGHT"); }
+  Serial.print("\t");
+  Serial.print(leftSpeed);
+  Serial.print("\t");
+  Serial.print(rightSpeed);
+  Serial.println();
 }
 
-void calibrate () {
-  double l_accum;
-  double c_accum;
-  double r_accum;
-  double avg;
+void driveLeftForward(int speed) {
+  motors.leftMotor(-1 * speed);
+}
 
-  for (int i = 0; i<5000; i++){
-    l_accum += left.read();
-    c_accum += center.read();
-    r_accum += right.read();
-  }
+void driveLeftBackward(int speed) {
+  motors.leftMotor(speed);
+}
 
-  avg = (l_accum + c_accum + r_accum)/15000;
-  Serial.println(avg);
-  LINETHRESHOLD = avg * 1/2;
-  Serial.println(LINETHRESHOLD);
-  motors.drive(255);
-  delay(10);
-  motors.stop();
+void driveRightForward(int speed) {
+  motors.rightMotor(speed);
+}
+
+void driveRightBackward(int speed) {
+  motors.rightMotor(-1 * speed);
+}
+
+bool onTape(int sensorReading) {
+  return sensorReading < TAPE_THRESHOLD;
 }
