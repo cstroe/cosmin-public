@@ -110,19 +110,23 @@ void loop()
 
 void driveLeftForward(int speed) {
   int adjustedSpeed = -0.85 * speed;
+  Serial.println(-1 * adjustedSpeed);
   motors.leftMotor(adjustedSpeed);
 }
 
 void driveLeftBackward(int speed) {
   int adjustedSpeed = 0.85 * speed;
+  Serial.println(-1 * adjustedSpeed);
   motors.leftMotor(adjustedSpeed);
 }
 
 void driveRightForward(int speed) {
+  Serial.println(speed);
   motors.rightMotor(speed);
 }
 
 void driveRightBackward(int speed) {
+  Serial.println(-1 * speed);
   motors.rightMotor(-1 * speed);
 }
 
