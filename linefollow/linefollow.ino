@@ -109,11 +109,11 @@ void loop()
 }
 
 void driveLeftForward(int speed) {
-  motors.leftMotor(-0.9 * speed);
+  motors.leftMotor(-0.85 * speed);
 }
 
 void driveLeftBackward(int speed) {
-  motors.leftMotor(0.9 * speed);
+  motors.leftMotor(0.85 * speed);
 }
 
 void driveRightForward(int speed) {
