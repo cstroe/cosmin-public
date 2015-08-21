@@ -52,22 +52,18 @@ void loop()
   }
    
   // drifting left
-  if((onTape(rightReading) && onTape(centerReading) && !onTape(leftReading)) ||
-     (onTape(rightReading) && !onTape(centerReading) && !onTape(leftReading))) 
+  if( !driftingRight && ((onTape(rightReading) && onTape(centerReading) && !onTape(leftReading)) ||
+                         (onTape(rightReading) && !onTape(centerReading) && !onTape(leftReading)))) 
   {
     driftingLeft = true;
-    driftingRight = false;
-    
     leftSpeed += SPEED_ADJUSTMENT;
   }
 
   // drift right
-  if((onTape(leftReading) && onTape(centerReading) && !onTape(rightReading)) ||
-     (onTape(leftReading) && !onTape(centerReading) && !onTape(rightReading)))
+  if( !driftingLeft && ((onTape(leftReading) && onTape(centerReading) && !onTape(rightReading)) ||
+                        (onTape(leftReading) && !onTape(centerReading) && !onTape(rightReading))))
   {
     driftingRight = true;
-    driftingLeft = false;
-    
     rightSpeed += SPEED_ADJUSTMENT;
   }
     
