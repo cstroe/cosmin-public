@@ -35,6 +35,7 @@ void setup()
 
 void loop()
 {
+  bool inRecovery = false;
   int leftReading = left.read();
   int centerReading = center.read();
   int rightReading = right.read();
@@ -73,6 +74,7 @@ void loop()
   // recovery
   if(!onTape(leftReading) && !onTape(centerReading) && !onTape(rightReading))
   {
+    inRecovery = true;
     if(driftingLeft) {
       leftSpeed = SPEED;
       rightSpeed = MIN_SPEED;
@@ -102,6 +104,7 @@ void loop()
   Serial.print(leftSpeed);
   Serial.print("\t");
   Serial.print(rightSpeed);
+  if(inRecovery) { Serial.print("\tRECOVERY"); }
   Serial.println();
 }
 
