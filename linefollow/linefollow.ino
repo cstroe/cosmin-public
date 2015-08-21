@@ -8,13 +8,13 @@ RedBotSensor left = RedBotSensor(A3);   // initialize a left sensor object on A3
 RedBotSensor center = RedBotSensor(A6); // initialize a center sensor object on A6
 RedBotSensor right = RedBotSensor(A7);  // initialize a right sensor object on A7
 
-#define SPEED 100
+#define SPEED 80
 #define MIN_SPEED 60
 
 #define SPEED_ADJUSTMENT 20
 
 // These thresholds are manually configured.
-#define TAPE_THRESHOLD  150 // below this value, we are looking at the tape
+#define TAPE_THRESHOLD  175 // below this value, we are looking at the tape
 
 RedBotMotors motors;
 int leftSpeed;   // variable used to store the leftMotor speed
