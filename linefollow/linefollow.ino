@@ -14,7 +14,7 @@ RedBotSensor right = RedBotSensor(A7);  // initialize a right sensor object on A
 #define SPEED_ADJUSTMENT 20
 
 // These thresholds are manually configured.
-#define TAPE_THRESHOLD  175 // below this value, we are looking at the tape
+#define TAPE_THRESHOLD  200 // below this value, we are looking at the tape
 
 RedBotMotors motors;
 int leftSpeed;   // variable used to store the leftMotor speed
@@ -72,11 +72,11 @@ void loop()
   {
     inRecovery = true;
     if(driftingLeft) {
-      leftSpeed = SPEED;
+      leftSpeed = SPEED + 20;
       rightSpeed = MIN_SPEED;
     }
     else if(driftingRight) {
-      rightSpeed = SPEED;
+      rightSpeed = SPEED + 20;
       leftSpeed = MIN_SPEED;
     }
     else {
