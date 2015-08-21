@@ -83,6 +83,10 @@ void loop()
       rightSpeed = SPEED;
       leftSpeed = MIN_SPEED;
     }
+    else {
+      leftSpeed = -MIN_SPEED;
+      rightSpeed = -MIN_SPEED;
+    }
   }
 
   driveRightForward(rightSpeed);
