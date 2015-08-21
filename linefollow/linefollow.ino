@@ -92,8 +92,6 @@ void loop()
   driveRightForward(rightSpeed);
   driveLeftForward(leftSpeed);
   
-  delay(0);  // add a delay to decrease sensitivity.
-  
   Serial.print(leftReading);
   Serial.print("\t");  // tab character
   Serial.print(centerReading);
