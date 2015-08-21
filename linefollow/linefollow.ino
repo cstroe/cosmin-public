@@ -15,9 +15,7 @@ RedBotSensor right = RedBotSensor(A7);  // initialize a right sensor object on A
 #define COUNTER_MAX 20
 
 // These thresholds are manually configured.
-#define TAPE_THRESHOLD  600 // below this value, we are looking at the tape
-#define BLUE_THRESHOLD  750 // above the TAPE_THRESHOLD and below this threshold, we are looking at blue carpet
-#define BLACK_THRESHOLD 850 // above this threshold, we are looking at black carpet
+#define TAPE_THRESHOLD  150 // below this value, we are looking at the tape
 
 #define NOT_SET 0
 #define TAPE_STATE 1
