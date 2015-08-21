@@ -8,18 +8,13 @@ RedBotSensor left = RedBotSensor(A3);   // initialize a left sensor object on A3
 RedBotSensor center = RedBotSensor(A6); // initialize a center sensor object on A6
 RedBotSensor right = RedBotSensor(A7);  // initialize a right sensor object on A7
 
-#define SPEED 120  // sets the nominal speed. Set to any number from 0 - 255.
+#define SPEED 100
+#define MIN_SPEED 60
 
-#define SPEED_ADJUSTMENT 30
-
-#define COUNTER_MAX 20
+#define SPEED_ADJUSTMENT 20
 
 // These thresholds are manually configured.
 #define TAPE_THRESHOLD  150 // below this value, we are looking at the tape
-
-#define NOT_SET 0
-#define TAPE_STATE 1
-#define NOT_TAPE_STATE 2
 
 RedBotMotors motors;
 int leftSpeed;   // variable used to store the leftMotor speed
@@ -62,7 +57,7 @@ void loop()
     driftingLeft = true;
     driftingRight = false;
     
-    rightSpeed -= SPEED_ADJUSTMENT;
+    leftSpeed += SPEED_ADJUSTMENT;
   }
 
   // drift right
@@ -72,7 +67,7 @@ void loop()
     driftingRight = true;
     driftingLeft = false;
     
-    leftSpeed -= SPEED_ADJUSTMENT;
+    rightSpeed += SPEED_ADJUSTMENT;
   }
     
   // recovery
@@ -80,11 +75,11 @@ void loop()
   {
     if(driftingLeft) {
       leftSpeed = SPEED;
-      rightSpeed = 70;
+      rightSpeed = MIN_SPEED;
     }
     else if(driftingRight) {
       rightSpeed = SPEED;
-      leftSpeed = 70;
+      leftSpeed = MIN_SPEED;
     }
   }
 
@@ -111,11 +106,11 @@ void loop()
 }
 
 void driveLeftForward(int speed) {
-  motors.leftMotor(-1 * speed);
+  motors.leftMotor(-0.9 * speed);
 }
 
 void driveLeftBackward(int speed) {
-  motors.leftMotor(speed);
+  motors.leftMotor(0.9 * speed);
 }
 
 void driveRightForward(int speed) {
