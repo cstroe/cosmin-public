@@ -18,8 +18,4 @@ describe "Video Store" do
 			"Rental Record for Samuel Customer\nOwes: 11.00\nEarned: 2 points"
 		)
 	end
-
-	it "prints a receipt for all movies" do
-		
-
 end
