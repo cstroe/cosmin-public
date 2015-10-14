@@ -8,6 +8,28 @@ describe "Video Store", "Movie rental prices" do
     @user = Customer.new("MovieTest User")
   end
 
+  describe "Negative Testing" do
+    before(:each) do
+      @movie = Movie.new(Movie::REGULAR, "up")
+    end
+
+    it "doesn't rent for 0 days" do
+      expect{ Rental.new(@movie, @user, 0) }.to raise_error
+    end
+
+    it "doesn't rent for negative days" do
+      expect{ Rental.new(@movie, @user, -3) }.to raise_error
+    end
+
+    it "rounds up rent for partial days" do
+      rental = Rental.new(@movie, @user, 1.2)
+      expect(rental.cost).to eq(6.00)
+    end
+  end
+
+
+
+
   describe "Children's movie rental" do
     before(:each) do
       @childrens_movie = Movie.new(Movie::CHILDRENS, "bugs life")

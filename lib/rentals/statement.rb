@@ -7,6 +7,11 @@ class Statement
 	end
 
 	def add_rental(rental)
+		rentals.each do |r|
+			 if r.movie == rental.movie
+				 raise "Cannot rent the same movie twice: #{rental}"
+			 end
+		end
 		self.rentals << rental
 	end
 
