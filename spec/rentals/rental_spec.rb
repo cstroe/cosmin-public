@@ -14,7 +14,7 @@ describe "Video Store" do
 		statement.add_rental(Rental.new(childrens_movie, customer, 5))
 
 		expect(statement.receipt).to eql(
-			"Rental Record for Samuel Customer\nOwes: 11.0\nEarned: 11.0 points"
+			"Rental Record for Samuel Customer\nOwes: 11.00\nEarned: 2 points"
 		)
 	end
 end

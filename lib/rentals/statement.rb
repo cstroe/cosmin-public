@@ -21,7 +21,7 @@ class Statement
 			total_points += 1
 		}
 
-		result << "Owes: #{total_amount}\nEarned: #{total_amount} points"
+		result << "Owes: #{sprintf('%.2f', total_amount)}\nEarned: #{total_points} points"
 
 		return result
 	end
