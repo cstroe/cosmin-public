@@ -6,6 +6,7 @@ require 'rentals/statement'
 
 describe "Video Store" do
 
+
 	it "prints a receipt" do
 		new_release_movie = Movie.new(Movie::NEW_RELEASE, "The Martian")
 		childrens_movie = Movie.new(Movie::CHILDRENS, "The LEGO Movie")
@@ -18,8 +19,5 @@ describe "Video Store" do
 			"Rental Record for Samuel Customer\nOwes: 11.00\nEarned: 2 points"
 		)
 	end
-
-	it "prints a receipt for all movies" do
-		
 
 end
