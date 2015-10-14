@@ -25,9 +25,11 @@ describe "Video Store", "Movie rental prices" do
       rental = Rental.new(@movie, @user, 1.2)
       expect(rental.cost).to eq(6.00)
     end
+
+    it "shouldn't rent a movie that isn't an option" do
+      expect{Movie.new(99, 'youtube')}.to raise_error
+    end
   end
-
-
 
 
   describe "Children's movie rental" do
@@ -77,6 +79,24 @@ describe "Video Store", "Movie rental prices" do
     it "rents for more than 1 day" do
       rental = Rental.new(@new_movie, @user, 4)
       expect(rental.cost).to eq(12.00)
+    end
+  end
+
+  describe "Classic movie rental" do
+    before(:each) do
+      @classic_movie = Movie.new(Movie::CLASSIC, "gone with the wind")
+    end
+    it "rents for 2 days" do
+      rental = Rental.new(@classic_movie, @user, 2)
+      expect(rental.cost).to eq(2.50)
+    end
+    it "rents for 5 days" do
+      rental = Rental.new(@classic_movie, @user, 5)
+      expect(rental.cost).to eq(2.50)
+    end
+    it "rents for more than 5 days" do
+      rental = Rental.new(@classic_movie, @user, 7)
+      expect(rental.cost).to eq(4.50)
     end
   end
 

@@ -4,7 +4,11 @@ class Rental
 	def initialize(movie, customer, days_rented)
 		self.movie = movie
 		self.customer = customer
-		self.days_rented = days_rented
+		if days_rented <= 0
+			raise "Need to rent for more than 0 days, you tried #{days_rented} days"
+		else
+				self.days_rented = days_rented.ceil
+		end
 	end
 
 	def cost
@@ -21,6 +25,14 @@ class Rental
 
 			if days_rented > 3
 				amount += (days_rented - 3) * 1.5
+			end
+
+			return amount
+		elsif movie.type == Movie::CLASSIC
+			amount = 2.5
+			
+			if days_rented > 5
+				amount += (days_rented - 5)
 			end
 
 			return amount
