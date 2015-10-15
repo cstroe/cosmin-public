@@ -21,7 +21,7 @@ var TodoList = React.createClass({
 
 	render: function() {
 		return (
-			<div>
+			<div id="todo-app">
 				<form onSubmit={this.onSubmit}>
 					<input type="text" name="text" ref="todoText" />
 					<input type="submit" />
