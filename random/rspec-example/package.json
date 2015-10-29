@@ -1,0 +1,45 @@
+{
+  "name": "app",
+  "version": "0.0.1",
+  "description": "todo stuff",
+  "repository": {
+    "type": "git"
+  },
+  "main": "server.js",
+  "scripts": {
+    "watch": "watchify -t node-lessify app.js -o public/js/bundle.js -v",
+    "browserify": "browserify -t node-lessify app.js | uglifyjs > public/js/bundle.js",
+    "build": "npm run lint && npm run browserify",
+    "watch-test": "testem",
+    "test": "testem ci",
+    "lint": "eslint components/ neo/ spec/"
+  },
+  "author": "me",
+  "license": "ISC",
+  "dependencies": {
+    "cookie": "^0.2.0",
+    "express": "^4.12.3",
+    "react": "^0.14.0",
+    "react-dom": "^0.14.0",
+    "superagent": "^1.2.0",
+    "when": "^3.7.3"
+  },
+  "devDependencies": {
+    "browserify": "^11.0.1",
+    "node-lessify": "^0.0.10",
+    "reactify": "^1.1.0",
+    "testem": "^0.9.0-1",
+    "uglify-js": "^2.4.21",
+    "watchify": "^3.2.1",
+    "configurify": "^1.0.0",
+    "jasmine": "^2.3.2",
+    "jasmine-node": "^1.14.5",
+    "eslint": "1.5.1"
+  },
+  "browserify": {
+    "transform": [
+      "reactify",
+      "configurify"
+    ]
+  }
+}
